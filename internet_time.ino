@@ -67,7 +67,7 @@ boolean gogu_ReturnCurentHour(S_DATA_STRUCT *time)
 		time->hour = UTC_hour + 2;
 		time->minutes = UTC_min;
 		lu8_returnValue = 1;
-
+ 
 	}
 
 	return lu8_returnValue;

@@ -6,6 +6,7 @@
 
 const char* ssid     = "DIGI-8N2x";
 const char* password = "salem2015";
+char auth[] = "cc52b581c0254520a61b504bdf7c3709";
 
 byte gu8_PreviousGoodHour = 8;
 byte gu8_NbOfErrors = 0;
@@ -34,7 +35,6 @@ void loop()
   }
 
   lu8_localHour = gogu_ReturnCurentHour(&s_Data);
-
 
   Serial.print("Local Hour : ");
   if (lu8_localHour != 0)
@@ -65,9 +65,10 @@ void loop()
     gogu_blinkLed(RED_LED, 3 );
   }
 
+
+  blynk(s_Data);
   if((lu8_localHour >= 8) && (lu8_localHour >= 22))
   {
-
   }
   else
   {
