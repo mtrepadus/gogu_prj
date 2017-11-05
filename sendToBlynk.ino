@@ -10,7 +10,7 @@
 
 
 
-void blynk(S_DATA_STRUCT data)
+void gogu_sendDataToBlynk(S_DATA_STRUCT data)
 {
 
   static int counter = 0;
@@ -24,7 +24,7 @@ void blynk(S_DATA_STRUCT data)
  
   /* senda data */
   Blynk.virtualWrite(0,data.temperature);
-  Blynk.virtualWrite(1,data.minutes);
+  Blynk.virtualWrite(1,data.hour * 100 + data.minutes);
   Blynk.virtualWrite(2,counter);
   counter = counter +1;
 

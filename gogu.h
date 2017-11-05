@@ -10,12 +10,15 @@
 
 #define RED_LED     15u
 #define GREEN_LED   12u
-#define BLUE_LED    13u   
+#define BLUE_LED    13u 
+#define DHTPIN      2u
+#define TEMP_LIGHT_PIN  0u  
 
 #define BLINK_PERIOD  300 //time in ms
 
 #define DHTTYPE DHT11
-#define DHTPIN  2
+
+#define TEMP_LIGHT_PIN  0
 
 extern char auth[];
 

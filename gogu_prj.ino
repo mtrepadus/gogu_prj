@@ -18,12 +18,17 @@ void setup() {
   gogu_WifiConnect();
   gogu_setPinDirection(RED_LED, OUTPUT);
   gogu_setPinDirection(GREEN_LED, OUTPUT);
+  gogu_setPinDirection(TEMP_LIGHT_PIN, OUTPUT);
+  digitalWrite(TEMP_LIGHT_PIN, LOW);
+  
 }
 
 void loop()
 {
   byte lu8_localHour = 0;
   S_DATA_STRUCT s_Data;
+
+
 
   if (  WiFi.status() == WL_CONNECTED)
   {
@@ -66,17 +71,38 @@ void loop()
   }
 
 
-  blynk(s_Data);
-  if((lu8_localHour >= 8) && (lu8_localHour >= 22))
+  gogu_sendDataToBlynk(s_Data);
+  /* Verify that the read temperature is OK */
+  if(s_Data.temperature != 255)
   {
+    if((lu8_localHour >= 8) && (lu8_localHour >= 22))
+    {
+      if (s_Data.temperature <27 )
+      {
+        digitalWrite(TEMP_LIGHT_PIN, HIGH);
+      }
+      if (s_Data.temperature > 32)
+      {
+        digitalWrite(TEMP_LIGHT_PIN, LOW);
+      }
+    }
+    else
+    {
+      if (s_Data.temperature < 22 )
+      {
+        digitalWrite(TEMP_LIGHT_PIN, HIGH);
+      }
+      if (s_Data.temperature > 27)
+      {
+        digitalWrite(TEMP_LIGHT_PIN, LOW);
+      }
+    }
   }
   else
   {
-
+      digitalWrite(TEMP_LIGHT_PIN, HIGH);
   }
 
-  //gogu_sendDataToBlynk(s_blynkData);
   // wait ten seconds before asking for the time again
   delay(20000);
-
 }
