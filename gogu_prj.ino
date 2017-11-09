@@ -28,7 +28,6 @@ void loop()
 {
   byte lu8_localHour = 0;
   S_DATA_STRUCT s_Data;
-  static byte lu8_counter = 0;
 
   if (  WiFi.status() == WL_CONNECTED)
   {
@@ -39,6 +38,7 @@ void loop()
     gogu_WifiConnect();
   }
 
+  s_Data.previousTime = s_Data.hour * 10000 + s_Data.minutes * 100 + s_Data.sec;
 
   if(gogu_ReturnCurentHour(&s_Data))
   {
@@ -52,7 +52,7 @@ void loop()
 
   if(gogu_getDHT_data(&s_Data))
   {
-    gogu_blinkLed(GREEN_LED,s_Data.temperature );
+    gogu_blinkLed(GREEN_LED, s_Data.temperature );
   }
   else
   {
@@ -64,67 +64,11 @@ void loop()
   {
     if((lu8_localHour >= 8) && (lu8_localHour < 22))
     {
-        if (s_Data.temperature < TEMP_DAY_LOW ) 
-        {
-            if(lu8_counter > TEMP_HISTER)
-            {
-              //digitalWrite(TEMP_LIGHT_PIN, HIGH);
-              digitalWrite(TEMP_LIGHT_PIN, LOW);
-              s_Data.lightStatus = HIGH;
-              lu8_counter = 0;
-            }
-            else
-            {
-              lu8_counter = lu8_counter + 1;
-            }
-        }
-
-        if (s_Data.temperature > TEMP_DAY_HIGH) 
-        {
-            if(lu8_counter > TEMP_HISTER)
-            {
-              //digitalWrite(TEMP_LIGHT_PIN, LOW);
-              digitalWrite(TEMP_LIGHT_PIN, HIGH);
-              s_Data.lightStatus = LOW;
-              lu8_counter = 0;
-            }
-            else
-            {
-              lu8_counter = lu8_counter + 1;
-            }
-        }
+       gogu_dayThermalManagement(&s_Data);
     }
     else
     {
-        if (s_Data.temperature < TEMP_NIGHT_LOW )
-        {
-            if(lu8_counter > TEMP_HISTER)
-            {
-              //digitalWrite(TEMP_LIGHT_PIN, HIGH);
-              digitalWrite(TEMP_LIGHT_PIN, LOW);
-              s_Data.lightStatus = HIGH;
-              lu8_counter = 0;
-            }
-            else
-            {
-              lu8_counter = lu8_counter + 1;
-            }
-        }
-
-        if (s_Data.temperature > TEMP_NIGHT_HIGH)
-        {
-            if(lu8_counter > TEMP_HISTER)
-            {
-              //digitalWrite(TEMP_LIGHT_PIN, LOW);
-              digitalWrite(TEMP_LIGHT_PIN, HIGH);
-              s_Data.lightStatus = LOW;
-              lu8_counter = 0;
-            }
-            else
-            {
-               lu8_counter = lu8_counter + 1;
-            }
-       }
+       gogu_nightThermalManagement(&s_Data);        
     }
   }
   else
@@ -137,4 +81,5 @@ void loop()
 
   // wait ten seconds before asking for the time again
   delay(20000);
+  delay(26000);
 }

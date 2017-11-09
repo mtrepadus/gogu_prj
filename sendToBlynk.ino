@@ -24,9 +24,10 @@ void gogu_sendDataToBlynk(S_DATA_STRUCT data)
  
   /* senda data */
   Blynk.virtualWrite(0,data.temperature);
-  Blynk.virtualWrite(1,data.hour * 100 + data.minutes);
+  Blynk.virtualWrite(1,data.hour * 10000 + data.minutes  * 100 + data.sec);
   Blynk.virtualWrite(2,counter);
   Blynk.virtualWrite(3,data.lightStatus);
+  Blynk.virtualWrite(4,data.previousTime);
   counter = counter +1;
 
   /* STOP WIFI */  
