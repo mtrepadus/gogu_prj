@@ -16,9 +16,10 @@ void setup() {
   // put your setup code here, to run once:
   gogu_InitSerial();
   gogu_WifiConnect();
-  gogu_setPinDirection(RED_LED, OUTPUT);
+  gogu_setPinDirection(RED_LED,   OUTPUT);
   gogu_setPinDirection(GREEN_LED, OUTPUT);
   gogu_setPinDirection(TEMP_LIGHT_PIN, OUTPUT);
+  //digitalWrite(TEMP_LIGHT_PIN, HIGH);
   digitalWrite(TEMP_LIGHT_PIN, LOW);
   
 }
@@ -27,8 +28,7 @@ void loop()
 {
   byte lu8_localHour = 0;
   S_DATA_STRUCT s_Data;
-
-
+  static byte lu8_counter = 0;
 
   if (  WiFi.status() == WL_CONNECTED)
   {
@@ -39,26 +39,15 @@ void loop()
     gogu_WifiConnect();
   }
 
-  lu8_localHour = gogu_ReturnCurentHour(&s_Data);
 
-  Serial.print("Local Hour : ");
-  if (lu8_localHour != 0)
+  if(gogu_ReturnCurentHour(&s_Data))
   {
-    gu8_NbOfErrors = 0;
-    gu8_PreviousGoodHour = s_Data.hour;
-    Serial.print(s_Data.hour);
-    Serial.println(s_Data.minutes);
+    lu8_localHour = s_Data.hour;
   }
   else
   {
-    gu8_NbOfErrors++;
-    if (gu8_NbOfErrors > 6)
-    {
-      gu8_PreviousGoodHour = 8;
-      //ESP.restart();
-    }
-    Serial.print(" Error, no hour received; previous hour was: ");
-    Serial.println(gu8_PreviousGoodHour);
+    lu8_localHour = 8;
+    gogu_blinkLed(BLUE_LED, 3 );
   }
 
   if(gogu_getDHT_data(&s_Data))
@@ -70,38 +59,81 @@ void loop()
     gogu_blinkLed(RED_LED, 3 );
   }
 
-
-  gogu_sendDataToBlynk(s_Data);
   /* Verify that the read temperature is OK */
   if(s_Data.temperature != 255)
   {
-    if((lu8_localHour >= 8) && (lu8_localHour >= 22))
+    if((lu8_localHour >= 8) && (lu8_localHour < 22))
     {
-      if (s_Data.temperature <27 )
-      {
-        digitalWrite(TEMP_LIGHT_PIN, HIGH);
-      }
-      if (s_Data.temperature > 32)
-      {
-        digitalWrite(TEMP_LIGHT_PIN, LOW);
-      }
+        if (s_Data.temperature < TEMP_DAY_LOW ) 
+        {
+            if(lu8_counter > TEMP_HISTER)
+            {
+              //digitalWrite(TEMP_LIGHT_PIN, HIGH);
+              digitalWrite(TEMP_LIGHT_PIN, LOW);
+              s_Data.lightStatus = HIGH;
+              lu8_counter = 0;
+            }
+            else
+            {
+              lu8_counter = lu8_counter + 1;
+            }
+        }
+
+        if (s_Data.temperature > TEMP_DAY_HIGH) 
+        {
+            if(lu8_counter > TEMP_HISTER)
+            {
+              //digitalWrite(TEMP_LIGHT_PIN, LOW);
+              digitalWrite(TEMP_LIGHT_PIN, HIGH);
+              s_Data.lightStatus = LOW;
+              lu8_counter = 0;
+            }
+            else
+            {
+              lu8_counter = lu8_counter + 1;
+            }
+        }
     }
     else
     {
-      if (s_Data.temperature < 22 )
-      {
-        digitalWrite(TEMP_LIGHT_PIN, HIGH);
-      }
-      if (s_Data.temperature > 27)
-      {
-        digitalWrite(TEMP_LIGHT_PIN, LOW);
-      }
+        if (s_Data.temperature < TEMP_NIGHT_LOW )
+        {
+            if(lu8_counter > TEMP_HISTER)
+            {
+              //digitalWrite(TEMP_LIGHT_PIN, HIGH);
+              digitalWrite(TEMP_LIGHT_PIN, LOW);
+              s_Data.lightStatus = HIGH;
+              lu8_counter = 0;
+            }
+            else
+            {
+              lu8_counter = lu8_counter + 1;
+            }
+        }
+
+        if (s_Data.temperature > TEMP_NIGHT_HIGH)
+        {
+            if(lu8_counter > TEMP_HISTER)
+            {
+              //digitalWrite(TEMP_LIGHT_PIN, LOW);
+              digitalWrite(TEMP_LIGHT_PIN, HIGH);
+              s_Data.lightStatus = LOW;
+              lu8_counter = 0;
+            }
+            else
+            {
+               lu8_counter = lu8_counter + 1;
+            }
+       }
     }
   }
   else
   {
       digitalWrite(TEMP_LIGHT_PIN, HIGH);
+      s_Data.lightStatus = LOW;
   }
+
+  gogu_sendDataToBlynk(s_Data);
 
   // wait ten seconds before asking for the time again
   delay(20000);

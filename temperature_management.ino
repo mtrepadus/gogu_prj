@@ -11,7 +11,7 @@ boolean gogu_getDHT_data(S_DATA_STRUCT *climate)
   delay(1000);
   
  // climate->humidity = dht.readHumidity();
-  climate->temperature = dht.readTemperature(); // or dht.readTemperature(true) for Fahrenheit
+  climate->temperature = dht.readTemperature() + TEMP_ERROR; // or dht.readTemperature(true) for Fahrenheit
 
 	if (isnan(climate->temperature))
 	{
