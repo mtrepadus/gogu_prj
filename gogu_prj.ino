@@ -53,7 +53,7 @@ void loop()
 
   if(gogu_getDHT_data(&s_Data))
   {
-    gogu_blinkLed(GREEN_LED, s_Data.temperature );
+    gogu_blinkLed(GREEN_LED, 3 );
   }
   else
   {
@@ -74,15 +74,14 @@ void loop()
   }
   else
   {
-      digitalWrite(TEMP_LIGHT_PIN, HIGH);
-      s_Data.lightStatus = LOW;
+      digitalWrite(TEMP_LIGHT_PIN, LOW);
+      s_Data.lightStatus = HIGH;
   }
 
   gogu_sendDataToBlynk(s_Data);
 
   // wait ten seconds before asking for the time again
-  delay(20000);
-  delay(23000);
+  delay(44000);
 }
 
 void gogu_initGogu(S_DATA_STRUCT *s_data)
