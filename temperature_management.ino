@@ -33,7 +33,7 @@ void gogu_dayThermalManagement(S_DATA_STRUCT *s_Data)
    static byte lu8_counter = 0;
    if (s_Data->temperature < TEMP_DAY_LOW ) 
         {
-            if(lu8_counter > TEMP_HISTER_HIGH)
+            if(lu8_counter > TEMP_HISTER_LOW)
             {
               digitalWrite(TEMP_LIGHT_PIN, LOW);
               s_Data->lightStatus = HIGH;
@@ -45,9 +45,9 @@ void gogu_dayThermalManagement(S_DATA_STRUCT *s_Data)
             }
         }
 
-        if (s_Data->temperature > TEMP_DAY_HIGH) 
+        if (s_Data->temperature >= TEMP_DAY_HIGH) 
         {
-            if(lu8_counter > TEMP_HISTER_LOW)
+            if(lu8_counter > TEMP_HISTER_HIGH)
             {
               digitalWrite(TEMP_LIGHT_PIN, HIGH);
               s_Data->lightStatus = LOW;
@@ -65,7 +65,7 @@ void gogu_nightThermalManagement(S_DATA_STRUCT *s_Data)
   static byte lu8_counter = 0;
   if (s_Data->temperature < TEMP_NIGHT_LOW )
         {
-            if(lu8_counter > TEMP_HISTER_LOW)
+            if(lu8_counter > TEMP_HISTER_HIGH)
             {
               digitalWrite(TEMP_LIGHT_PIN, LOW);
               s_Data->lightStatus = HIGH;

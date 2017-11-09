@@ -10,24 +10,24 @@ char auth[] = "cc52b581c0254520a61b504bdf7c3709";
 
 byte gu8_PreviousGoodHour = 8;
 byte gu8_NbOfErrors = 0;
+S_DATA_STRUCT s_Data;
+
 
 
 void setup() {
   // put your setup code here, to run once:
   gogu_InitSerial();
   gogu_WifiConnect();
-  gogu_setPinDirection(RED_LED,   OUTPUT);
-  gogu_setPinDirection(GREEN_LED, OUTPUT);
-  gogu_setPinDirection(TEMP_LIGHT_PIN, OUTPUT);
-  //digitalWrite(TEMP_LIGHT_PIN, HIGH);
-  digitalWrite(TEMP_LIGHT_PIN, LOW);
+
+  gogu_initGogu(&s_Data);
+  gogu_sendDataToBlynk(s_Data);
   
 }
 
 void loop()
 {
   byte lu8_localHour = 0;
-  S_DATA_STRUCT s_Data;
+  
 
   if (  WiFi.status() == WL_CONNECTED)
   {
@@ -39,6 +39,7 @@ void loop()
   }
 
   s_Data.previousTime = s_Data.hour * 10000 + s_Data.minutes * 100 + s_Data.sec;
+
 
   if(gogu_ReturnCurentHour(&s_Data))
   {
@@ -81,5 +82,24 @@ void loop()
 
   // wait ten seconds before asking for the time again
   delay(20000);
-  delay(26000);
+  delay(23000);
 }
+
+void gogu_initGogu(S_DATA_STRUCT *s_data)
+{
+  gogu_setPinDirection(RED_LED,   OUTPUT);
+  gogu_setPinDirection(GREEN_LED, OUTPUT);
+  gogu_setPinDirection(TEMP_LIGHT_PIN, OUTPUT);
+  
+  // Light the heating lamp;
+  digitalWrite(TEMP_LIGHT_PIN, LOW);
+  
+  s_data->hour     = 0;
+  s_data->minutes  = 0;
+  s_data->sec      = 0;
+  s_data->previousTime  = 0;
+  s_data->temperature  = 0;
+  s_data->humidity  = 0;
+  s_data->lightStatus = HIGH;
+}
+
