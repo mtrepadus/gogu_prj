@@ -17,7 +17,7 @@
 
 #define TEMP_ERROR      2u 
 #define TEMP_DAY_LOW    26
-#define TEMP_DAY_HIGH   30
+#define TEMP_DAY_HIGH   29
 #define TEMP_NIGHT_LOW  23
 #define TEMP_NIGHT_HIGH 26
 

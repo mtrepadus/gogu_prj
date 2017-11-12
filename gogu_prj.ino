@@ -3,6 +3,9 @@
 #include <WiFiUdp.h>
 #include "gogu.h"
 
+//#include <ESP8266_Lib.h>
+//#include <BlynkSimpleShieldEsp8266.h>
+
 
 const char* ssid     = "DIGI-8N2x";
 const char* password = "salem2015";
@@ -11,8 +14,7 @@ char auth[] = "cc52b581c0254520a61b504bdf7c3709";
 byte gu8_PreviousGoodHour = 8;
 byte gu8_NbOfErrors = 0;
 S_DATA_STRUCT s_Data;
-
-
+//WidgetLED gogu_statusLED(V3);
 
 void setup() {
   // put your setup code here, to run once:
@@ -76,6 +78,7 @@ void loop()
   {
       digitalWrite(TEMP_LIGHT_PIN, LOW);
       s_Data.lightStatus = HIGH;
+//      gogu_statusLED.on();
   }
 
   gogu_sendDataToBlynk(s_Data);
@@ -92,6 +95,8 @@ void gogu_initGogu(S_DATA_STRUCT *s_data)
   
   // Light the heating lamp;
   digitalWrite(TEMP_LIGHT_PIN, LOW);
+
+//  gogu_statusLED.on();
   
   s_data->hour     = 0;
   s_data->minutes  = 0;

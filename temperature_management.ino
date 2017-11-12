@@ -37,6 +37,7 @@ void gogu_dayThermalManagement(S_DATA_STRUCT *s_Data)
             {
               digitalWrite(TEMP_LIGHT_PIN, LOW);
               s_Data->lightStatus = HIGH;
+//              gogu_statusLED.on();
               lu8_counter = 0;
             }
             else
@@ -51,6 +52,7 @@ void gogu_dayThermalManagement(S_DATA_STRUCT *s_Data)
             {
               digitalWrite(TEMP_LIGHT_PIN, HIGH);
               s_Data->lightStatus = LOW;
+//                gogu_statusLED.off();
               lu8_counter = 0;
             }
             else
@@ -69,6 +71,7 @@ void gogu_nightThermalManagement(S_DATA_STRUCT *s_Data)
             {
               digitalWrite(TEMP_LIGHT_PIN, LOW);
               s_Data->lightStatus = HIGH;
+//              gogu_statusLED.on();
               lu8_counter = 0;
             }
             else
@@ -83,6 +86,7 @@ void gogu_nightThermalManagement(S_DATA_STRUCT *s_Data)
             {
               digitalWrite(TEMP_LIGHT_PIN, HIGH);
               s_Data->lightStatus = LOW;
+//              gogu_statusLED.off();
               lu8_counter = 0;
             }
             else
