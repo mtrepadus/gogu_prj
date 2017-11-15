@@ -63,13 +63,13 @@ boolean gogu_ReturnCurentHour(S_DATA_STRUCT *time)
 
 		int UTC_hour 	= (epoch  % 86400L) / 3600;
 		int UTC_min		= (epoch  % 3600) / 60;
-    int UTC_sec   = epoch  % 60;
-    
+		int UTC_sec   = epoch  % 60;
+
 		time->hour    = UTC_hour + 2;
 		time->minutes = UTC_min;
-    time->sec     = UTC_sec;
+		time->sec     = UTC_sec;
 		lu8_returnValue = 1;
- 
+
 	}
 
 	return lu8_returnValue;

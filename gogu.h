@@ -16,14 +16,14 @@
 #define TEMP_LIGHT_PIN  0u 
 
 #define TEMP_ERROR      2u 
-#define TEMP_DAY_LOW    26
-#define TEMP_DAY_HIGH   29
+#define TEMP_DAY_LOW    25
+#define TEMP_DAY_HIGH   28
 #define TEMP_NIGHT_LOW  23
 #define TEMP_NIGHT_HIGH 26
 
 #define BLINK_PERIOD  300 //time in ms
-#define TEMP_HISTER_LOW     5
-#define TEMP_HISTER_HIGH    10
+#define TEMP_HISTER_LOW     3
+#define TEMP_HISTER_HIGH    7
 
 #define DHTTYPE DHT11
 
@@ -33,13 +33,15 @@ extern char auth[];
 
 typedef struct
 {
-  byte  hour;
-  byte  minutes;
-  byte  sec;
-  int   previousTime;
-  float temperature;
-  float humidity;
-  byte  lightStatus;
+	byte  hour;
+	byte  minutes;
+	byte  sec;
+	int   previousTime;
+	float temperature;
+	float humidity;
+	byte  lightStatus;
+	int   tempError;
+	int   tempChanges;
 }S_DATA_STRUCT;
 
 #endif /* GOGU_H_ */
