@@ -38,17 +38,23 @@ boolean gogu_getDHT_data(S_DATA_STRUCT *climate)
 void gogu_dayThermalManagement(S_DATA_STRUCT *s_Data)
 {
 	static byte lu8_counter = 0;
+  static byte lu8_noChange = 0;
+
 	if (s_Data->temperature <= TEMP_DAY_LOW )
 	{
+		/* temperature lower than normal, must start the heater */
 		if(lu8_counter > TEMP_HISTER_LOW)
 		{
-			if(digitalRead(TEMP_LIGHT_PIN) == HIGH)
-			{
-				digitalWrite(TEMP_LIGHT_PIN, LOW);
-				s_Data->lightStatus = 1;
-				s_Data->tempChanges =  s_Data->tempChanges + 1;
-				lu8_counter = 0;
-			}
+			  /* start the heater only if a certain time passed */
+        if(digitalRead(TEMP_LIGHT_PIN) == HIGH)
+        {
+  				/* set the pin LOW in order to activate the relay */
+  				digitalWrite(TEMP_LIGHT_PIN, LOW);
+  				s_Data->lightStatus = 1;
+  				s_Data->tempChanges =  s_Data->tempChanges + 1;
+  				lu8_counter = 0;
+          lu8_noChange = 0;
+        }
 		}
 		else
 		{
@@ -58,21 +64,38 @@ void gogu_dayThermalManagement(S_DATA_STRUCT *s_Data)
 
 	if (s_Data->temperature >= TEMP_DAY_HIGH)
 	{
+		/* temperature higher than normal, must stop the heater */
 		if(lu8_counter > TEMP_HISTER_HIGH)
 		{
-			if(digitalRead(TEMP_LIGHT_PIN) == LOW)
-			{
-				digitalWrite(TEMP_LIGHT_PIN, HIGH);
-				s_Data->lightStatus = 0;
-				s_Data->tempChanges =  s_Data->tempChanges + 1;
-				lu8_counter = 0;
-			}
+			  /* stop the heater only if a certain time passed */
+				if(digitalRead(TEMP_LIGHT_PIN) == LOW)
+        {
+  				/* set the pin HIGH in order to deactivate the relay */
+  				digitalWrite(TEMP_LIGHT_PIN, HIGH);
+  				s_Data->lightStatus = 0;
+  				s_Data->tempChanges =  s_Data->tempChanges + 1;
+  				lu8_counter = 0;
+          lu8_noChange = 0;
+        }
 		}
 		else
 		{
 			lu8_counter = lu8_counter + 1;
 		}
 	}
+
+ lu8_noChange++;
+ if (lu8_noChange > 100)
+ {
+      /* start the heater only if a certain time passed */
+        /* set the pin LOW in order to activate the relay */
+        digitalWrite(TEMP_LIGHT_PIN, LOW);
+        s_Data->lightStatus = 1;
+        s_Data->tempChanges =  s_Data->tempChanges + 1;
+        lu8_counter = 0;
+        lu8_noChange = 0;
+        
+ }
 }
 
 void gogu_nightThermalManagement(S_DATA_STRUCT *s_Data)
@@ -80,15 +103,18 @@ void gogu_nightThermalManagement(S_DATA_STRUCT *s_Data)
 	static byte lu8_counter = 0;
 	if (s_Data->temperature <= TEMP_NIGHT_LOW )
 	{
+		/* temperature lower than normal, must start the heater */
 		if(lu8_counter > TEMP_HISTER_HIGH)
 		{
-			if(digitalRead(TEMP_LIGHT_PIN) == HIGH)
-			{
-				digitalWrite(TEMP_LIGHT_PIN, LOW);
-				s_Data->tempChanges =  s_Data->tempChanges + 1;
-				s_Data->lightStatus = 1;
-				lu8_counter = 0;
-			}
+			  /* start the heater only if a certain time passed */
+        if(digitalRead(TEMP_LIGHT_PIN) == HIGH)
+        {
+  				/* set the pin LOW in order to activate the relay */
+  				digitalWrite(TEMP_LIGHT_PIN, LOW);
+  				s_Data->tempChanges =  s_Data->tempChanges + 1;
+  				s_Data->lightStatus = 1;
+  				lu8_counter = 0;
+        }
 		}
 		else
 		{
@@ -98,15 +124,18 @@ void gogu_nightThermalManagement(S_DATA_STRUCT *s_Data)
 
 	if (s_Data->temperature >= TEMP_NIGHT_HIGH)
 	{
+		/* temperature higher than normal, must stop the heater */
 		if(lu8_counter > TEMP_HISTER_LOW)
 		{
-			if(digitalRead(TEMP_LIGHT_PIN) == LOW)
-			{
-				digitalWrite(TEMP_LIGHT_PIN, HIGH);
-				s_Data->lightStatus = 0;
-				s_Data->tempChanges =  s_Data->tempChanges + 1;
-				lu8_counter = 0;
-			}
+			  /* stop the heater only if a certain time passed */
+       if(digitalRead(TEMP_LIGHT_PIN) == HIGH)
+        {
+  				/* set the pin HIGH in order to deactivate the relay */
+  				digitalWrite(TEMP_LIGHT_PIN, HIGH);
+  				s_Data->lightStatus = 0;
+  				s_Data->tempChanges =  s_Data->tempChanges + 1;
+  				lu8_counter = 0;
+        }
 		}
 		else
 		{

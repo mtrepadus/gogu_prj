@@ -15,15 +15,15 @@
 
 #define TEMP_LIGHT_PIN  0u 
 
-#define TEMP_ERROR      2u 
-#define TEMP_DAY_LOW    25
-#define TEMP_DAY_HIGH   28
-#define TEMP_NIGHT_LOW  23
-#define TEMP_NIGHT_HIGH 26
+#define TEMP_ERROR      0u 
+#define TEMP_DAY_LOW    28
+#define TEMP_DAY_HIGH   36
+#define TEMP_NIGHT_LOW  25
+#define TEMP_NIGHT_HIGH 28
 
 #define BLINK_PERIOD  300 //time in ms
 #define TEMP_HISTER_LOW     3
-#define TEMP_HISTER_HIGH    7
+#define TEMP_HISTER_HIGH    10
 
 #define DHTTYPE DHT11
 
